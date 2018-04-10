@@ -1,3 +1,5 @@
+pragma solidity ^0.4.19;
+
 contract SnarkPrecompile {
     function verify_proof (bytes, bytes, bytes) returns (bool);
 }
