@@ -1,18 +1,20 @@
 pragma solidity ^0.4.19;
 
 contract SnarkPrecompile {
-    function verify_proof (bytes, bytes, bytes) returns (bool);
+    function verify_proof(bytes, bytes, bytes) returns (bool);
 }
 
 contract Mixer {
     mapping (bytes32 => bool) public serials;
     mapping (bytes32 => bool) public roots;
     SnarkPrecompile zksnark = SnarkPrecompile(0x0000000000000000000000000000000000000005);
-    struct Mtree {
+
+    struct MerkleTree {
         uint cur;
         bytes32[16] leaves;
     }
-    Mtree public MT;
+
+    MerkleTree public MT;
     bytes public vk;
 
     function Mixer(bytes _vk) {
@@ -22,7 +24,7 @@ contract Mixer {
             MT.leaves[i] = 0x0;
     }
 
-    //Merkletree.append(com)
+    // MerkleTree.append(com)
     function insert(bytes32 com) returns (bool res) {
         if (MT.cur == 16) {
             return false;
@@ -37,17 +39,20 @@ contract Mixer {
     }
 
     function getTree() constant returns (bytes32[32] tree) {
-        //bytes32[32] memory tree;
+        // bytes32[32] memory tree;
         uint i;
-        for (i = 0; i < 16; i++)
+        for (i = 0; i < 16; i++) {
             tree[16 + i] = MT.leaves[i];
-        for (i = 16 - 1; i > 0; i--)
+        }
+
+        for (i = 16 - 1; i > 0; i--) {
             tree[i] = sha256(tree[i*2], tree[i*2+1]);
+        }
 
         return tree;
     }
 
-    // Merkletree.root()
+    // MerkleTree.root()
     function getRoot() constant returns(bytes32 root) {
         root = getTree()[1];
     }
@@ -71,11 +76,27 @@ contract Mixer {
         bytes20 addr_byte = bytes20(addr);
         bytes memory pub = new bytes(128);
         uint i;
-        for (i = 0; i < 32; i++) pub[i] = serial[i];
-        for (i = 0; i < 20; i++) pub[32 + i] = addr_byte[i];
-        for (i = 20; i < 32; i++) pub[32 + i] = 0;
-        for (i = 0; i < 32; i++) pub[32*2 + i] = rt[i];
-        for (i = 0; i < 32; i++) pub[32*3 + i] = mac[i];
+
+        for (i = 0; i < 32; i++) {
+            pub[i] = serial[i];
+        }
+
+        for (i = 0; i < 20; i++) {
+            pub[32 + i] = addr_byte[i];
+        }
+
+        for (i = 20; i < 32; i++) {
+            pub[32 + i] = 0;
+        }
+
+        for (i = 0; i < 32; i++) {
+            pub[32*2 + i] = rt[i];
+        }
+
+        for (i = 0; i < 32; i++) {
+            pub[32*3 + i] = mac[i];
+        }
+
         if (roots[rt] == true) {
             if (!serials[serial]) {
                 if (!zksnark.verify_proof(vk, proof, pub)) {
@@ -84,20 +105,18 @@ contract Mixer {
                 serials[serial] = true;
                 if (!addr.send(1 ether)) {
                     throw;
-                }
-                else {
+                } else {
                     success = true;
                 }
-            }
-            else {
+            } else {
                 return;
             }
-        }
-        else {
+        } else {
             return;
         }
     }
 
     function dummy() { 
+        // Nothing
     }
 }
