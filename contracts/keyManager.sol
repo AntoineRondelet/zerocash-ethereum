@@ -56,29 +56,29 @@ contract KeyManager {
 
     // TODO: See if it's better (from a perf perspective) to assign a value with msg.sender
     // in order to always access the sender field of the msg object (optimization ? or it doesn't change anything ?)
-    function AddVirtualAddress(bytes key) public {
+    function AddVirtualAddress(bytes pubKey) public {
         // We make sure that no virtual address has been added for this address before
         // If a virtual address for this address has already been declared then
         // we fail, because this would be an UPDATE and NOT an ADD operation.
         require(!virtualAddresses[msg.sender].isValue);
 
-        virtualAddresses[msg.sender] = VirtualAddress({publicKey: key, isValue: true});
-        LogKeyAdded(msg.sender, key);
+        virtualAddresses[msg.sender] = VirtualAddress({publicKey: pubKey, isValue: true});
+        LogKeyAdded(msg.sender, pubKey);
     }
     
-    function UpdateVirtualAddress(bytes key) public {
+    function UpdateVirtualAddress(bytes pubKey) public {
         // We make sure that a virtual address has been added for this address before
         // in order to make sure that this is an UPDATE and NOT an ADD operation.
         require(virtualAddresses[msg.sender].isValue);
 
         // Get the former public key of the msg.sender in order to use it in the LogKeyUpdated event
-        bytes formerKey = virtualAddresses[msg.sender].publicKey;
+        bytes formerPubKey = virtualAddresses[msg.sender].publicKey;
 
-        virtualAddresses[msg.sender] = VirtualAddress({publicKey: key, isValue: true});
-        LogKeyUpdated(msg.sender, formerKey, key);
+        virtualAddresses[msg.sender] = VirtualAddress({publicKey: pubKey, isValue: true});
+        LogKeyUpdated(msg.sender, formerPubKey, pubKey);
     }
     
-    function DeleteVirtualAddress(bytes key) public {
+    function DeleteVirtualAddress(bytes pubKey) public {
         // We make sure that a virtual address has been added for this address before
         // in order to make sure that this is an UPDATE and NOT an ADD operation.
         require(virtualAddresses[msg.sender].isValue);
@@ -86,7 +86,22 @@ contract KeyManager {
         // Set the publicKey to this address to the NULL_KEY value, and set the 
         // isValue to false in order to satisfy the require of the AddVirtualAddress function
         // next time this peer we'll call the contract to add his public key to the register
-        virtualAddresses[msg.sender] = VirtualAddress({publicKey: key, isValue: false});
-        LogKeyDeleted(msg.sender, key);
+        virtualAddresses[msg.sender] = VirtualAddress({publicKey: pubKey, isValue: false});
+        LogKeyDeleted(msg.sender, pubKey);
+    }
+
+    // Returns the public key (for encryption of private Tx) of the corresponding address
+    // Note that using this function right before doing a payment would leak a lot of information
+    // and almost reveal the recipient of the payment. Thus, senders should use this function in response of the 
+    // AddVirtualAddress, UpdateVirtualAddress, DeleteVirtualAddress events in order to maintain their local
+    // public keys registries up to date at every moment. By doing so, they SHOULD never need to do a call
+    // to this function right before doing a payment (a part for special circumstances)
+    function GetVirtualAddress(address addr) public returns (bytes) {
+        if (!virtualAddresses[msg.sender].isValue) {
+            // If the virtualAddress doesn't exist (ie: No pubKey declared for this address)
+            // Then we return the null address
+            return NULL_KEY;
+        }
+        return virtualAddresses[msg.sender].publicKey;
     }
 }
