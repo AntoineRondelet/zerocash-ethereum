@@ -12,3 +12,11 @@ Here are some draws that illustrate the explanation above:
 
 ![relay contract](./.github/relayContract.png)
 ![coin issuer contract](./.github/coinIssuerContract.png)
+
+## Resources
+
+- https://media.consensys.net/introduction-to-zksnarks-with-examples-3283b554fc3b
+- https://github.com/jstoxrocky/zksnarks_example
+- https://github.com/JacobEberhardt/ZoKrates
+- https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649
+- http://zerocash-project.org/media/pdf/zerocash-extended-20140518.pdf
