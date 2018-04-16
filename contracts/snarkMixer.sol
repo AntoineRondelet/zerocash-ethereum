@@ -10,46 +10,46 @@ contract Mixer {
     SnarkPrecompile zksnark = SnarkPrecompile(0x0000000000000000000000000000000000000005);
 
     struct MerkleTree {
-        uint cur;
+        uint currentLeafIndex;
         bytes32[16] leaves;
     }
 
-    MerkleTree public MT;
-    bytes public vk;
+    MerkleTree public tree;
+    bytes public verificationKey;
 
-    function Mixer(bytes _vk) {
-        vk = _vk;
-        MT.cur = 0;
+    function Mixer(bytes _verificationKey) {
+        verificationKey = _verificationKey;
+        tree.currentLeafIndex = 0;
         for (uint i = 0; i < 16; i++)
-            MT.leaves[i] = 0x0;
+            tree.leaves[i] = 0x0;
     }
 
-    // MerkleTree.append(com)
-    function insert(bytes32 com) returns (bool res) {
-        if (MT.cur == 16) {
+    // MerkleTree.append(commitment)
+    function insert(bytes32 commitment) returns (bool res) {
+        if (tree.currentLeafIndex == 16) {
             return false;
         }
-        MT.leaves[MT.cur] = com;
-        MT.cur++;
+        tree.leaves[tree.currentLeafIndex] = commitment;
+        tree.currentLeafIndex++;
         return true;
     }
 
     function getLeaves() constant returns (bytes32[16]) {
-        return MT.leaves;
+        return tree.leaves;
     }
 
-    function getTree() constant returns (bytes32[32] tree) {
-        // bytes32[32] memory tree;
+    function getTree() constant returns (bytes32[32] currentTree) {
+        // bytes32[32] memory currentTree;
         uint i;
         for (i = 0; i < 16; i++) {
-            tree[16 + i] = MT.leaves[i];
+            currentTree[16 + i] = tree.leaves[i];
         }
 
         for (i = 16 - 1; i > 0; i--) {
-            tree[i] = sha256(tree[i*2], tree[i*2+1]);
+            currentTree[i] = sha256(currentTree[i*2], currentTree[i*2+1]);
         }
 
-        return tree;
+        return currentTree;
     }
 
     // MerkleTree.root()
@@ -57,21 +57,21 @@ contract Mixer {
         root = getTree()[1];
     }
 
-    function deposit(bytes32 com) returns (bool res) {
+    function deposit(bytes32 commitment) returns (bool res) {
         if (msg.value != 1 ether) {
             msg.sender.send(msg.value);
             return false;
         }
-        if (!insert(com)) {
+        if (!insert(commitment)) {
             msg.sender.send(msg.value);
             return false;
         }
-        bytes32 rt = getRoot();
-        roots[rt] = true;
+        bytes32 rootTree = getRoot();
+        roots[rootTree] = true;
         return true;
     }
 
-    function withdraw(bytes32 serial, address addr, bytes32 rt, bytes32 mac, bytes proof) returns (bool success) {
+    function withdraw(bytes32 serial, address addr, bytes32 rootTree, bytes32 mac, bytes proof) returns (bool success) {
         success = false;
         bytes20 addr_byte = bytes20(addr);
         bytes memory pub = new bytes(128);
@@ -90,16 +90,16 @@ contract Mixer {
         }
 
         for (i = 0; i < 32; i++) {
-            pub[32*2 + i] = rt[i];
+            pub[32*2 + i] = rootTree[i];
         }
 
         for (i = 0; i < 32; i++) {
             pub[32*3 + i] = mac[i];
         }
 
-        if (roots[rt] == true) {
+        if (roots[rootTree] == true) {
             if (!serials[serial]) {
-                if (!zksnark.verify_proof(vk, proof, pub)) {
+                if (!zksnark.verify_proof(verificationKey, proof, pub)) {
                     return false;
                 }
                 serials[serial] = true;
@@ -114,9 +114,5 @@ contract Mixer {
         } else {
             return;
         }
-    }
-
-    function dummy() { 
-        // Nothing
     }
 }
