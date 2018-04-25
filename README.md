@@ -55,6 +55,11 @@ ganache-cli
 truffle test
 ```
 
+## Contributing
+
+Every contributions are welcomed. 
+Please open a Pull Request for any fix/suggestion you want to submit, and open an issue if you find a flaw or have any improvements in mind.
+
 ## Resources
 
 ### zk-SNARKs
