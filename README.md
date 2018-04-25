@@ -26,7 +26,7 @@ Here are some draws that illustrate the explanation above:
     - All members but Bob fail to access the coin secret. Bob is now the "owner" of the coin.
     - Bob can decide to redeem 1ETH in exchange of the coin secret (his balance will thus be incremented, and an attacker can correlate Alice's balance decrease with Bob's balance increase), OR, Bob can decide to send this secret to another member C of the network as a private payment.
 
-**Note:** The idea here is to convert part of the user's balances into some sort of "coin abstractions" which exchange does not affect the state per say. Only the exchange of the coins' secrets is settled on-chain. A user in possession of the secret at any time `t` can redeem his funds by providing the secret. This leads to the appropriate state modification (publicly visible).
+**Note:** The idea here is to convert part of the user's balances into some sort of "coin abstractions" which exchange does not affect the state per say. Only the exchange of the coins' secrets is settled **encrypted** on-chain. A user in possession of the secret at any time `t` can redeem his funds by providing the secret. This leads to the appropriate state modification (publicly visible).
 While peers exchange coin secrets, their balances are not modified, and no one is able to determine the parties involved in the serie of transaction (only the coin creator, who paid to create the coin is known to be involved in a private payment, but after he sent the coin to another member, every following transactions are completely obfuscated).
 
 ## Flaws of the current (naïve) design
