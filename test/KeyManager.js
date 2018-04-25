@@ -49,7 +49,7 @@ contract('KeyManager', (accounts) => {
 
         // Update address for accounts[0] should succeed, because a key already exists for this user
         let result = await instance.UpdateVirtualAddress(newPublicKey, txObj);
-        assert.ok(result.receipt.status, "Public key of accounts[0] updated from the key store");
+        assert.ok(result.receipt.status, "Fail to update the key of the given account");
         
         // Make sure that the event fields are set to the good values
         const keyUpdatedEvent = result.logs.find(el => (el.event === logKeyUpdatedEvent));
