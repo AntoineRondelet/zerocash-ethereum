@@ -14,25 +14,25 @@ contract KeyManager {
     // rather than one single user controlling them all (No one should be able to know that the stealth addresses belong to the same real user)
     event LogKeyAdded(
         address peer,
-        bytes key
+        bytes32 key
     );
     
     event LogKeyUpdated(
         address peer,
-        bytes formerKey,
-        bytes newKey
+        bytes32 formerKey,
+        bytes32 newKey
     );
     
     event LogKeyDeleted(
         address peer,
-        bytes key
+        bytes32 key
     );
 
-    bytes internal constant NULL_KEY = "0x0x0x0x0";
+    bytes32 internal constant NULL_KEY = "0x0x0x0x0";
 
     // VirtualAddress is the address structure used to do private payments
     struct VirtualAddress {
-        bytes publicKey;
+        bytes32 publicKey;
         // The virtual address might need to contain other fields (see: in Monero and zCash)
         // To complete if needed ...
 
@@ -56,7 +56,7 @@ contract KeyManager {
 
     // TODO: See if it's better (from a perf perspective) to assign a value with msg.sender
     // in order to always access the sender field of the msg object (optimization ? or it doesn't change anything ?)
-    function AddVirtualAddress(bytes pubKey) public {
+    function AddVirtualAddress(bytes32 pubKey) public {
         // We make sure that no virtual address has been added for this address before
         // If a virtual address for this address has already been declared then
         // we fail, because this would be an UPDATE and NOT an ADD operation.
@@ -66,19 +66,19 @@ contract KeyManager {
         LogKeyAdded(msg.sender, pubKey);
     }
     
-    function UpdateVirtualAddress(bytes pubKey) public {
+    function UpdateVirtualAddress(bytes32 pubKey) public {
         // We make sure that a virtual address has been added for this address before
         // in order to make sure that this is an UPDATE and NOT an ADD operation.
         require(virtualAddresses[msg.sender].isValue);
 
         // Get the former public key of the msg.sender in order to use it in the LogKeyUpdated event
-        bytes formerPubKey = virtualAddresses[msg.sender].publicKey;
+        bytes32 formerPubKey = virtualAddresses[msg.sender].publicKey;
 
         virtualAddresses[msg.sender] = VirtualAddress({publicKey: pubKey, isValue: true});
         LogKeyUpdated(msg.sender, formerPubKey, pubKey);
     }
     
-    function DeleteVirtualAddress(bytes pubKey) public {
+    function DeleteVirtualAddress(bytes32 pubKey) public {
         // We make sure that a virtual address has been added for this address before
         // in order to make sure that this is an UPDATE and NOT an ADD operation.
         require(virtualAddresses[msg.sender].isValue);
@@ -96,12 +96,12 @@ contract KeyManager {
     // AddVirtualAddress, UpdateVirtualAddress, DeleteVirtualAddress events in order to maintain their local
     // public keys registries up to date at every moment. By doing so, they SHOULD never need to do a call
     // to this function right before doing a payment (a part for special circumstances)
-    function GetVirtualAddress(address addr) public returns (bytes) {
-        if (!virtualAddresses[msg.sender].isValue) {
+    function GetVirtualAddress(address addr) public constant returns (bytes32) {
+        if (!virtualAddresses[addr].isValue) {
             // If the virtualAddress doesn't exist (ie: No pubKey declared for this address)
             // Then we return the null address
             return NULL_KEY;
         }
-        return virtualAddresses[msg.sender].publicKey;
+        return virtualAddresses[addr].publicKey;
     }
 }
