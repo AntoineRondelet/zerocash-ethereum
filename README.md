@@ -13,6 +13,31 @@ Here are some draws that illustrate the explanation above:
 ![relay contract](./.github/relayContract.png)
 ![coin issuer contract](./.github/coinIssuerContract.png)
 
+## Private transactions from Alice to Bob
+
+1. Bob stores his public key on the key store of the KeyManager.sol contract. Thus every peer of the network can access it
+2. Alice fetches the keys of all peers of the network, and keeps her "local keystore" up to date (by listening the different events emitted by the KeyManager)
+3. If Alice wants to send 1ETH to Bob, here is what happens:
+    - She "burns" (deposit) 1ETH on the CoinProvider.sol contract
+    - She gets a "coin" in return. She is the only person able to redeem a ETH back from this coin because she is the only person to have the secret associated with this coin (hash pre-image for instance)
+    - She encrypts the coin secret (hash pre-image) with Bob's public key (off-chain operation)
+    - She calls the "Broadcast" function of the TransactionRelay.sol contract to brodacast the ciphertext of the secret to all network peers (hides the recipient of Alice's payment)
+    - Bob (and all other network members), listen to the "LogTransaction" event of the "TransactionRelay" and try to decipher the message
+    - All members but Bob fail to access the coin secret. Bob is now the "owner" of the coin.
+    - Bob can decide to redeem 1ETH in exchange of the coin secret (his balance will thus be incremented, and an attacker can correlate Alice's balance decrease with Bob's balance increase), OR, Bob can decide to send this secret to another member C of the network as a private payment.
+
+## Flaws of the current (naïve) design
+
+1. After Alice has sent the coin's secret to Bob; she still know it, and can basically redeem the 1ETH (stored on the CoinProvider contract's balance) before Bob or any further recipient on the chain of payment.
+2. Any peer who has received the coin secret at least once can redeem the coin, and also, know the peer who redeems the coin at the end (and they can know when)
+3. This design is absolutely not secure against replay attacks. If C invokes the function "claimFunds" of the CoinProvider, but the call fails; any malicious user could replay the call and steal the funds.
+
+## TODO
+
+1. Instead of trying to decrypt all ciphertexts that are broadcasted (which is pretty costly), we could think about something like CryptoNote's Destination Key (see: https://cryptonote.org/whitepaper.pdf page 8)
+2. The ZeroCoin and ZeroCash protocols use coins and commitments along with zk-SNARKs to prevent any private information leak to the rest of the network. See how this could be applied to this model
+3. Think about the lightest and simplest way to implement this coin/commitment scheme in a secure manner and with the smallest impact on performances.
+
 ## Run the tests
 
 1. Run:
