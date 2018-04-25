@@ -40,8 +40,9 @@ Here are some draws that illustrate the explanation above:
 
 1. Instead of trying to decrypt all ciphertexts that are broadcasted (which is pretty costly), we could think about something like CryptoNote's Destination Key (see: https://cryptonote.org/whitepaper.pdf page 8).
 2. The ZeroCoin and ZeroCash protocols use coins and commitments along with zk-SNARKs to prevent any private information leak to the rest of the network. See how this could be applied to this model
-3. Think about the lightest and simplest way to implement this coin/commitment scheme in a secure manner and with the smallest impact on performances.
-4. Extend the scheme to support arbitary payments value (like in ZeroCash).
+3. Extend BabyZoE
+4. Think about the lightest and simplest way to implement this coin/commitment scheme in a secure manner and with the smallest impact on performances.
+5. Extend the scheme to support arbitary payments value (like in ZeroCash).
 
 ## Run the tests
 
@@ -66,6 +67,7 @@ Please open a Pull Request for any fix/suggestion you want to submit, and open a
 
 - https://media.consensys.net/introduction-to-zksnarks-with-examples-3283b554fc3b
 - https://github.com/jstoxrocky/zksnarks_example
+- https://github.com/zcash-hackworks/babyzoe
 - https://github.com/JacobEberhardt/ZoKrates
 - https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649
 - http://zerocash-project.org/media/pdf/zerocash-extended-20140518.pdf
