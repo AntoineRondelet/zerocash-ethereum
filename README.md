@@ -13,6 +13,18 @@ Here are some draws that illustrate the explanation above:
 ![relay contract](./.github/relayContract.png)
 ![coin issuer contract](./.github/coinIssuerContract.png)
 
+## Run the tests
+
+1. Run:
+```bash
+ganache-cli
+```
+
+2. Run:
+```bash
+truffle test
+```
+
 ## Resources
 
 - https://media.consensys.net/introduction-to-zksnarks-with-examples-3283b554fc3b
