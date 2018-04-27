@@ -27,6 +27,16 @@ contract('KeyManager', (accounts) => {
         const keyAddedEvent = result.logs.find(el => (el.event === logKeyAddedEvent));
         assert.equal(keyAddedEvent.args.peer.toString(), account, "Accounts do not match");
         assert.equal(keyAddedEvent.args.key.toString(), publicKey, "Keys do not match");
+        
+        // Key deposit for the same address should fail
+        ok = false;
+        result = await instance.AddVirtualAddress(publicKey, txObj).catch(function(err){
+            assert.include(err.message, 'revert', 'Address already mapped to a public key')
+            ok = true;
+        })
+        if (!ok) {
+            assert.fail("This address already has an address in the key store");
+        }
     });
 
     it('Get virtual address', async () => {
