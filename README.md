@@ -60,6 +60,50 @@ ganache-cli
 truffle test
 ```
 
+## Generate ECC key-pair to use to secure communication between parties
+
+- Private key generation:
+```bash
+openssl ecparam -name secp256k1 -genkey -noout -out peer_priv_key.pem
+```
+- Public key computation from the private key:
+```bash
+openssl ec -in peer_priv_key.pem -pubout -out peer_pub_key.pem
+```
+
+## Play around with the contracts
+
+1. Generate a key-pair for all the peers of the network. We assume, for this example, that we only have 2 peers: Alice and Bob
+```bash
+# Private keys generation
+openssl ecparam -name secp256k1 -genkey -noout -out alice_priv_key.pem
+openssl ecparam -name secp256k1 -genkey -noout -out bob_priv_key.pem
+
+# Public key generation
+openssl ec -in alice_priv_key.pem -pubout -out alice_pub_key.pem
+openssl ec -in bob_priv_key.pem -pubout -out bob_pub_key.pem
+```
+2. Compute a shared secret between Alice and Bob (ECDH):
+```bash
+openssl pkeyutl -derive -inkey alice_priv_key.pem -peerkey bob_pub_key.pem -out alice_shared_secret.bin
+openssl pkeyutl -derive -inkey bob_priv_key.pem -peerkey alice_pub_key.pem -out bob_shared_secret.bin
+
+# The outputs of the 2 following commands should be equal
+base64 alice_shared_secret.bin
+base64 bob_shared_secret.bin
+```
+3. Encrypt the secret to unlock founds on the contract (Here we assume a payment from Alice to Bob):
+```bash
+echo '[secretData]' > plainSecret.txt
+openssl enc -aes256 -base64 -k $(base64 alice_shared_secret.bin) -e -in plainSecret.txt -out cipherSecret.txt
+
+# Send the encrypted data in a transaction to be relayed by the transaction relay contract
+
+# Upon reception of the event from the transaction relay contract, Bob, tries to decipher it to see if he is the recipient of the message:
+openssl enc -aes256 -base64 -k $(base64 bob_shared_secret.bin) -d -in cipherSecret.txt -out plainSecret.txt
+```
+4. If Bob managed to decipher the secret data, then he was the recipient, and now possess the secret the unlock the funds on the coin/commitment manager contract. If he cannot decipher the message, then he was not the recipient of the message, and ignore the transaction.
+
 ## Contributing
 
 Every contributions are welcomed. 
