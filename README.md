@@ -42,11 +42,22 @@ While peers exchange coin secrets, their balances are not modified, and no one i
 
 ## TODO
 
+### Design
+
 1. Instead of trying to decrypt all ciphertexts that are broadcasted (which is pretty costly), we could think about something like CryptoNote's Destination Key (see: https://cryptonote.org/whitepaper.pdf page 8).
 2. The ZeroCoin and ZeroCash protocols use coins and commitments along with zk-SNARKs to prevent any private information leak to the rest of the network. See how this could be applied to this model
 3. Extend BabyZoE
 4. Think about the lightest and simplest way to implement this coin/commitment scheme in a secure manner and with the smallest impact on performances.
 5. Extend the scheme to support arbitary payments value (like in ZeroCash).
+
+### Code
+
+1. Extend the snarkMixer.sol contract, to make it inherit from the Verfier contract and verify proofs
+2. Implement a flow where Alice creates a coin (which is a data structure associated with a secret number which is the factorization of 2 primes)
+3. Alice thinks about a big number N such that `N = P*Q`, where `P` and `Q` are large prime numbers
+4. Alice burns 1ETH to create a coin associated with the large number `N`
+5. Alice uses the keyManager contract to get Bob's key and encrypt the secret numbers `P` and `Q` to send them to Bob through the transactionRelay contract
+6. Bob decrypt the numbers `P` and `Q`, and retrieves the coin created by Alice, by providing a proof of knowledge of `P` and `Q`
 
 ## Run the tests
 
