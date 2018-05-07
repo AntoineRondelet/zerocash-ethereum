@@ -1,11 +1,5 @@
-// This file is MIT Licensed.
-//
-// Copyright 2017 Christian Reitwiessner
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+pragma solidity ^0.4.19;
 
-pragma solidity ^0.4.14;
 library Pairing {
     struct G1Point {
         uint X;
@@ -141,7 +135,9 @@ library Pairing {
         return pairing(p1, p2);
     }
 }
-contract Verifier {
+
+contract SumsToFifteenDebug {
+    // Verifier code - Beginning
     using Pairing for *;
     struct VerifyingKey {
         Pairing.G2Point A;
@@ -164,17 +160,17 @@ contract Verifier {
         Pairing.G1Point H;
     }
     function verifyingKey() internal returns (VerifyingKey vk) {
-        vk.A = Pairing.G2Point([0x1a1d156eb3d0f1d82ade32586f0a668b0f79ea4fbfaec6a06169e70688e06386, 0x1fcfae9a8a4761fad6d0d97db9b426cb551c9038be9cccabc1676b9d98f1799c], [0x1ea2fe4e2380459dd71fcfa23386f8571afe15e5f62deb00ff0eebb6d5121552, 0x1421b22f940a7586a83d2a2cf79743001c513e820ed942c65338c99b885965cb]);
-        vk.B = Pairing.G1Point(0x2156dc698555911da0af96256274371a067e00b397ad08ee052c1f0e5b42e93, 0xb387c51ace07a684ce2943968b72b4bec970d4ef41776cd80aada50b0c7ebb6);
-        vk.C = Pairing.G2Point([0x31904f3aa97f8f6c5506e796f63e4e0cd5233fe72336a7ae316ad06f2c8b48a, 0x1ab7a695d161562589abd04e778da389e88f516264a32de895bf7d5363546a5], [0x9d507e113b137161a7654fd4663b3b7da13c5b4714e84e9100885b133e0cd29, 0x4832429317f1e0e07b8ce20f5983f6733a1a5bb70b817d982e518a16053dbcb]);
-        vk.gamma = Pairing.G2Point([0xd67c2a50faa751316c8d604fa78d357247a7a7d2a218137839a76405197af33, 0x25f14660b1fb5d132baade91a599f215d4cc4d944ee92150e826de100acb6b87], [0x1bf3678445ed7c3f071a290516a2944d37402afdba3b57a340a65bfe5e94bcbc, 0x1e039fec87a7159fb062240c7af46a17b94ffdd54957c0dcb88d72253a1d28fc]);
-        vk.gammaBeta1 = Pairing.G1Point(0x2acfeb0e8b54b92b0bff17684f8f224701fa6249a3882d55ac626dc1a51e97c6, 0x7a067d07935b0c420a77c4cf5d220ea1173f91b2db2a618fbad8e7c4f94c12);
-        vk.gammaBeta2 = Pairing.G2Point([0x290ec31f37beddf965041288ad2277054a0c0d1a29e70afb6477fe08c893879e, 0x154fe95b1157872333c9c8401f5cdcabab42a321c4ba9a75023615ba5233b738], [0xf7577253548df11e8d5e9cfbdf5089f2dc3db5e3855ae852ef6db4b53fa8deb, 0x460af0ccede2c39f0bbb14184324c59f2c8c0c4424337685a1c60609a6a87c5]);
-        vk.Z = Pairing.G2Point([0x2b8a86f4a9718152561f8f831579246621001a55b82929e1b96ea735c83ab630, 0x1e98f09c12dd9580f5dec17b017d55fd60bf6c9380560d1e644242826698c2c6], [0x642c414dc4d4b115e8a0360da2f951ed4d9e50e5f4d7690506446946f2455d6, 0x28187ccae415896773ad3b077a5a130b83066b5d4383a893a9109be1170a23f2]);
+        vk.A = Pairing.G2Point([0x9bf0304747059207191e39d47679755d774ee1a3ef62b7f286bad4b448e9651, 0xf26e39cc03e7d5d7908cea272613cd624efacbb8b5cb0641307acb15dfc06eb], [0x1d3517ab48a2c914b2778eae9ca2dc73474c82baa7852a21abb6c2b356a4d0d7, 0x4e289d0df15d64a1b69b09eff13706d9522cc96c7978e10af65ccd1bfce8b54]);
+        vk.B = Pairing.G1Point(0xc368888d6c5c3cbb058e77eb7c03903d12a3c96dc330368230ecb2309ac4b76, 0x1b81a7f32beca5fab7848acfa504fe60576fe38195cd33e7dd55ecd1186a6775);
+        vk.C = Pairing.G2Point([0x2d4b534fdc59468b41ea75bae75a12ac4dfa3ffb05ab9a414a673f546bb0f092, 0x8e93dd601fa15ee8a9c676576be4409432940cf94f9b534a17c71f7e365376e], [0xa394985f7ad2e7c23ac4310f0d574c6ae725c5de71228cad4442bf8d71e601c, 0x11baf5fdf558a34042647f0282e89a75eadae268f13a9ecab2122030749c355b]);
+        vk.gamma = Pairing.G2Point([0x2cd9c74970e3cd16be65d4c3916a91f22b60953a851a583541652e53f3989823, 0x17fd297424ab663c866153747f9d2dcf53c5506dfae5f98361b79acdda712ac9], [0x1238d2e623b5d05d62f65136be8010eca5ccd3acb5166118564b52e48be2caf2, 0x2c042ef137a67532cbbdc419a8fdee54e34f9f90a009766fdf3f24743f9b0d56]);
+        vk.gammaBeta1 = Pairing.G1Point(0xf05be661e3b449c81b4414bec8be0f7bb305e110d625b809742b542182222ce, 0xa7a385621ba50b9f2ba0da6e87a98df5f836571def5303bc34c836e94d5b8ca);
+        vk.gammaBeta2 = Pairing.G2Point([0x17154526b9463f66917b5ec96f3f699b5b51282679aa64338ed1462ef921eb99, 0x113735be3fef27dec034b6d687be7cb9da1dce84e098a101f031dfbd3be622f7], [0x17d5b5fd9f5904a4df8090c9b598f3476f947e4dd918ed322b3027256a1a8b8c, 0x23de5bb5da6d552701bd66179d6d56176370d485b98ec7734ea08b4ac8af237a]);
+        vk.Z = Pairing.G2Point([0x2be14b1647f761e062c3bfa7102326b2d8357126e4a4f985c85944a475b39e64, 0x28effb771d807bd0b931c6a472bd7c2d336c426f23006a217269f23c057b2824], [0xf8a1442bc3db68b8758e88fd3d9304db58641aa0c198e8fce28383f20fdd2d3, 0x151215b72293c38a7670481e550fd60436f0ba20ba3beeef46a1ce90c2e550b4]);
         vk.IC = new Pairing.G1Point[](3);
-        vk.IC[0] = Pairing.G1Point(0x1dc440ba2f632eecc3d7513493c88f0c9ae766a068b410898762feac102d2995, 0x178366a3477211350850886524ab933846fe3b5d0494b585e434feb4efbd81a);
-        vk.IC[1] = Pairing.G1Point(0x1521fcba4d199b81ee1d82eb152fd7efff4c33a5deac7eda49dd1c5d0992562c, 0x24dc7af6145b6579d37dd524fe8b1f47b3dece3cf058342f70d21fee69118071);
-        vk.IC[2] = Pairing.G1Point(0x15c44a72edd2cf5ac5d2baecac32d3d12ce1d409c443d9e791e9ca010785f08a, 0x23d40141f529a5d44b837b8531f95cff7070d20b3024be0bc772c1a194877ec7);
+        vk.IC[0] = Pairing.G1Point(0x25bc36673baf3610d2136eefdf2232df484857651f5b6831e8941afc61da50a7, 0x1f617b060288e5586bc91875f4dba4c76f84777c6a4ab1b8a9abd34d1aeacc0c);
+        vk.IC[1] = Pairing.G1Point(0x15867047835f84d9a8b919b6d8aa1c64a67aa9377213ca700df2e983a7b34645, 0x15950be0161185c50deadca4d4cf216ca69488d57743f0f4ceeb5fcbb9a5452e);
+        vk.IC[2] = Pairing.G1Point(0x2bbea1686ed80de3b39ad635857d7a5f9cabf4670d199380bae8d27f49aee6c, 0x10fd117330abf09ef89f61540ccc8148ec4508811becb0c2f14e263e8ea58ff2);
     }
     function verify(uint[] input, Proof proof) internal returns (uint) {
         VerifyingKey memory vk = verifyingKey();
@@ -210,7 +206,7 @@ contract Verifier {
             uint[2] h,
             uint[2] k,
             uint[2] input
-        ) returns (bool r) {
+        ) returns (bool) {
         Proof memory proof;
         proof.A = Pairing.G1Point(a[0], a[1]);
         proof.A_p = Pairing.G1Point(a_p[0], a_p[1]);
@@ -229,6 +225,60 @@ contract Verifier {
             return true;
         } else {
             return false;
+        }
+    }
+    // Verifier code - End
+
+    event LogResult (
+        bool res
+    );
+
+    bool result;
+
+    bool public success = false;
+    function verifyFifteenProofHardcoded() public {
+        uint[2] memory a = [0x10c00a39dc7747d769eb81232974ce9a229d110c7987a54c07c034c2c6af8350, 0x2a980770191a8331dbf00379797b63d27c1150dbe47bfc69f998e4c005794a4d];
+        uint[2] memory a_p = [0x1623c7fb2136e586f0ef7591b216ea9586ce2cee5a4831147bbbf6f623e9047a, 0x1254c7fb542bd85906eeb8510c4fa5e7f40f88b2bb6fe7127e051eb1e7d6590f];
+        uint[2][2] memory b = [[0x2b9b93b9e3833c6279a46894f7cb950f9570888776f8125c912b3515294babe, 0x1922b132a198d5e63f106d04f25a626ea351f9c9baba49e9bf4040098d7d61bd], [0x1f70c44cd6414f96fd2ee08fd7ca409ae0ccf53137ba5a3bc93ffdecd51eb35a, 0x1643d2db0ab4d405f6888bd96ae1fa7cb03ac4771e3da173ad43bdca0df85df6]];
+        uint[2] memory b_p = [0x22d92a36476e28555486d2944a4fc1b1e8c36c336b3d0709b9741a5f38e00de3, 0x2c7f1663e80b8c2e3b76a60fcd7c09c72a30c6ce7fc0e347eecc3f5301c6769a];
+        uint[2] memory c = [0x1a7872b0ce466bf4a2240f33baabbe8e73c804861b82c72a7aa654f6a9396f86, 0x2f9e2ebc2c99a0b6ef34c7a113bf285dca62d6b938fe4fde6ff9d40539efd0c7];
+        uint[2] memory c_p = [0x1d275412b73f78096921ccdc423c4a358faa04b9c55195744eae910275006378, 0x2877b1027b093423c7f8a9e670968112d3c33a39960c5a64e9fd75f1672d51b9];
+        uint[2] memory h = [0x142d590c4dc59c9c67104e386f72dcb5660021cdc875e4ca87ce91354cd76d7e, 0xe040b4c5adb5982c32b5917bd9d1a67cf53c0021d10cb13ce0d728d6473b53f];
+        uint[2] memory k = [0xba173680de64db289c41b3e4e9523e543a474fcd5e4af6173fe8373b97afc12, 0x221c658314cf8cafb1e9e148c973637e603571833e5e1c6624992109710f1d0];
+        uint[2] memory input = [uint256(5), uint256(1)];
+        // Verifiy the proof
+        success = verifyTx(a, a_p, b, b_p, c, c_p, h, k, input);
+        if (success) {
+            // Proof verified
+            result = true;
+            LogResult(result);
+        } else {
+            // Sorry, bad proof!
+            result = false;
+            LogResult(result);
+        }
+    }
+
+    function verifyFifteen(
+        uint[2] a,
+        uint[2] a_p,
+        uint[2][2] b,
+        uint[2] b_p,
+        uint[2] c,
+        uint[2] c_p,
+        uint[2] h,
+        uint[2] k,
+        uint[2] input) public {
+        // Verifiy the proof
+        success = verifyTx(a, a_p, b, b_p, c, c_p, h, k, input);
+        if (success) {
+            // Proof verified
+            result = true;
+            LogResult(result);
+        } else {
+            // Sorry, bad proof!
+            result = false;
+            LogResult(result);
         }
     }
 }

@@ -1,0 +1,3 @@
+def main(x,private s1,private s2):
+	((s1 + s2) + x) == 15
+	return 1
