@@ -6,6 +6,8 @@
             "eip158Block": 0,
             "byzantiumBlock": 0
     },
+    "alloc": {
+    },
     "coinbase"   : "0x0000000000000000000000000000000000000000",
     "difficulty" : "0x20000",
     "extraData"  : "",
