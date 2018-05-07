@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19;
 
-import './verifier.sol';
+import './Verifier.sol';
 
 contract Factorize is Verifier {
     event LogProofVerification(
@@ -23,11 +23,9 @@ contract Factorize is Verifier {
         success = verifyTx(a, a_p, b, b_p, c, c_p, h, k, input);
         if (success) {
             // Proof verified
-            success = true;
             LogProofVerification(success);
         } else {
             // Sorry, bad proof!
-            success = false;
             LogProofVerification(success);
         }
     }
