@@ -1,0 +1,29 @@
+Generating proof...
+Using Witness: {"~out_0": 1, "a": 2, "c": 10, "b": 5, "~one": 1}
+Public inputs: [1, 10, 1]
+Private inputs: [2, 5]
+* Elements of w skipped: 0 (0.00%)
+* Elements of w processed with special addition: 0 (0.00%)
+* Elements of w remaining: 1 (100.00%)
+* Elements of w skipped: 0 (0.00%)
+* Elements of w processed with special addition: 0 (0.00%)
+* Elements of w remaining: 1 (100.00%)
+* Elements of w skipped: 0 (0.00%)
+* Elements of w processed with special addition: 1 (50.00%)
+* Elements of w remaining: 1 (50.00%)
+* Elements of w skipped: 0 (0.00%)
+* Elements of w processed with special addition: 1 (25.00%)
+* Elements of w remaining: 3 (75.00%)
+* G1 elements in proof: 7
+* G2 elements in proof: 1
+* Proof size in bits: 2294
+Proof:
+A = 0x193897ed1e967774fa0dd47117bc8ae705124a421d42a3e6ee009dee39915cb3, 0xa257db5c2d332c17105ffe423b680cee4c0816129d97b3975ed97594169f693
+A_p = 0xb8877b1a76757892f908eb70d7a0f68ce466591bccc617c66ed3a730af26e68, 0x230cb11f5e720da2a5ae8478b26a57ba0d15a4217886fa0f26236cc5de0e671f
+B = [0x503aeb6535620c48803c332a9d432fcbf63afc48e06619f9e92f5c4de742a6b, 0x1577c53722567e1a91c0298f9af1d73ec1af30b5adb744e121b08226aa3267f2], [0x4cbd0251371159c2640972512066dbc8021b547f685270e5eb574f67c36753e, 0x1a033f1715d8fe4fc159ae1265eccb54cfdd2958e4fe41772b1f4cc11a0b1323]
+B_p = 0xee3c7c5f2aedf377bcefd5a1d16236120108025c57f219ff322940d9e78b714, 0x692ddd31541aa370b257c67ee0290671b61202e376b4900343a9f53f43bbf4e
+C = 0x4b43e62e7c086436fbe54d474290a0d50357018c0640a5de79e365fc6c8c3fa, 0x304901b8175f7ff8c0485fd2b69d3cd5926e193179022e8612cbd2cfdd0cca11
+C_p = 0x9f7472d87bf720c68cf9997653c9800a7546f1769cbe7015aec639f4b1c1566, 0x29cc7fd356f0d7ed3ef9c62588489ba9572915ed0c4b72238f3835d36ded0986
+H = 0x2b25a38e035e269c7a265055c713e7b952bcbb34d537d6a9383ea9458f983b25, 0x182aa663a4ea7cd5a73827bb6c918e4d78b9185b9fe45519b706d403ebaea73d
+K = 0x2071c55cdfc68b1aeac89afd596a6159799904755e0d7e6fae31a621f95611f7, 0xbe83d0a30c16b675612f84add7a842896d10555e3ab772be2db76c7088e87d3
+generate-proof successful: true
