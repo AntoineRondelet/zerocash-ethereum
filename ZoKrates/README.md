@@ -9,7 +9,7 @@ def main(c, private a, private b):
 ```
 2. Compile the program down to an arithmetic circuit:
 ```bash
-zokrates compile -i sumsToFifteen.code
+zokrates compile -i factorize.code
 ```
 3. Compute the setup:
 ```bash
