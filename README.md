@@ -12,7 +12,7 @@ The architecture comports 5 contracts:
 Here are some draws that illustrate the explanation above:
 
 ![relay contract](./.github/relayContract.png)
-![coin issuer contract](./.github/coinIssuerContract.png)
+![mixer contract](./.github/mixerContract.png)
 
 ## Steps for a Private transactions from Alice to Bob
 
@@ -34,30 +34,21 @@ While peers exchange coin secrets, their balances are not modified, and no one i
 
 ## Flaws of the current (naïve) design
 
-1. After Alice has sent the secret to Bob; she still know it, and can basically redeem the 1ETH (stored on the Mixer contract's balance) before Bob or any further recipient on the chain of payment.
-2. Any peer who has received the coin secret at least once can redeem the coin, and also, know the peer who redeems the coin at the end (and they can know when)
-3. This design is **absolutely not secure** against replay attacks. If someone tries to withdraw from the mixer, but the call fails (out of gas for instance), any malicious user could replay the call and steal the funds.
+1. After Alice has sent the secret to Bob; she still know it, and can basically redeem the 1ETH (stored on the Mixer contract's balance) before Bob or any further recipient on the chain of payment. We need to "bind" the commitment to Bob's identity to prevent malicious senders to redeem the funds and still them for the recipients.
+2. This design is **absolutely not secure** against replay attacks. If someone tries to withdraw from the mixer, but the call fails (out of gas for instance), any malicious user could replay the call and steal the funds. This, again, shows the importance to bind the commitment to the recipient, to reject all attempts to redeem the 1ether associated with one commitment. 
 
 ## Advantages of this design
 
-1. The cardinality of the anonymity set is the size of the network.
+-  The cardinality of the anonymity set is the size of the network.
+
+## Cons of this design
+
+-  Overhead due to the fact that all recipients need to try to decrypt all the Broadcast events, to see if they were the recipients of a Tx. 
 
 ## TODO
 
-1. Think about the lightest and simplest way to implement this coin/commitment scheme in a secure manner and with the smallest impact on performances.
-2. Extend the scheme to support arbitary payments value (like in ZeroCash).
-
-## Run the tests
-
-1. Run:
-```bash
-ganache-cli
-```
-
-2. Run:
-```bash
-truffle test
-```
+- This about ways to extend the scheme to support arbitary payments value (like in ZeroCash).
+- Think about the KeyStore. It could also be possible to use people's public keys (stored on keybase, or anywhere on the internet), to encrypt the secret data to be broadcasted. This, would render the KeyStore useless...
 
 ## Generate ECC key-pair to use to secure communication between parties
 
