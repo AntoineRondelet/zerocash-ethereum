@@ -57,8 +57,8 @@ While calling the mixer contract and "spending" commitments still generates stat
 
 This write-up is a modest proposal to try an integrate part of the [ZeroCash](http://zerocash-project.org/paper) protocol on Ethereum.
 Experiments around this topic have been done:
-    - [BabyZoE](https://github.com/zcash-hackworks/babyzoe)
-    - [Miximus](https://github.com/barryWhiteHat/miximus)
+- [BabyZoE](https://github.com/zcash-hackworks/babyzoe)
+- [Miximus](https://github.com/barryWhiteHat/miximus)
 
 Although, to the best of my knowledge, none of them has done a full integration supporting the JoinSplit feature (that is very important for the privacy level).
 
