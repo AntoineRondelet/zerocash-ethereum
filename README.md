@@ -46,7 +46,7 @@ It is trully the ability to [Join and Split](https://github.com/zcash/zcash/blob
 
 Of course, being able to know the identities of the set of users might not be enough in some cases. Nevertheless, this ability to combine commitments as we which means that, we are able to "break" the transaction graph. If we note the transaction graph by `G  = (V, E)`, where `V` is the set of vertices (nodes), and `E` is the set of edges (links), we go from a graph `G_before` where `V` contains all the users of the system, and `E` contains the set of transactions that correspond to their interactions; to a graph `G_after`, where `V` still contains a set of known users, but where `E` is the empty set (no interaction/link can be drawn from one user to another - assuming they all use the mixer contract obviously).
 
-While calling the mixer contract and "spending" commitments still generates state transitions (the state transition here is basically encoded by the smart contract function we call, and modifies the merkle tree, as commitments are added, and serial numbers are revealed), **but these state transition do not reveal the same amount of information as the state transition triggered by plain Ethereum transactions.**
+While calling the mixer contract and "spending" commitments still generates state transitions (the state transition here is basically encoded by the smart contract function we call, and modifies the merkle tree, as commitments are added, and serial numbers are revealed), **but these state transition do not reveal the same amount of information as the state transition triggered by plain Ethereum transactions.** (All state transitions not equal in term of information leakage!)
 
 ## Remarks
 
